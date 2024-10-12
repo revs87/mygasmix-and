@@ -1,7 +1,6 @@
 package com.rvcoding.mygasmix.ui
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -32,9 +31,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -44,21 +43,31 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.text.isDigitsOnly
-import com.rvcoding.mygasmix.R
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
+import coil3.compose.AsyncImage
+import coil3.request.ImageRequest
+import coil3.request.crossfade
 import com.rvcoding.mygasmix.ui.component.Spinner
 import com.rvcoding.mygasmix.ui.theme.GreenWoods
 
 
 @SuppressLint("DefaultLocale")
 @Composable
-fun MyGasScreen() {
+fun MyGasScreen(vm: MyGasViewModel = viewModel()) {
+    val splashImage by vm.splashImages.collectAsStateWithLifecycle()
+
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
-        Image(
+        AsyncImage(
+            model = ImageRequest.Builder(LocalContext.current)
+                .data(splashImage)
+                .crossfade(true)
+                .crossfade(1000)
+                .build(),
             modifier = Modifier.fillMaxSize(),
-            painter = painterResource(id = R.drawable.splash),
             contentScale = ContentScale.Crop,
             contentDescription = "background-img"
         )
