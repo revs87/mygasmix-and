@@ -1,6 +1,7 @@
 package com.rvcoding.mygasmix
 
 import android.annotation.SuppressLint
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -20,10 +21,14 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MenuDefaults
+import androidx.compose.material3.MenuItemColors
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -43,24 +48,38 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.core.text.isDigitsOnly
+import androidx.core.view.WindowCompat
+import com.rvcoding.mygasmix.ui.theme.GreenWoods
 import com.rvcoding.mygasmix.ui.theme.MyGasMixTheme
 
 class MainActivity : ComponentActivity() {
+
+    @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            WindowCompat.setDecorFitsSystemWindows(window, false)
+        }
         enableEdgeToEdge()
         setContent {
             MyGasMixTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                Scaffold(
+                    modifier = Modifier.fillMaxSize(),
+                ) { _ ->
                     Surface(
                         modifier = Modifier
-                            .fillMaxSize()
-                            .padding(innerPadding)
+                            .fillMaxSize(),
+                        color = GreenWoods
                     ) {
                         MyGasScreen()
                     }
@@ -87,6 +106,15 @@ fun MyGasScreen() {
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
+            Text(
+                modifier = Modifier.fillMaxWidth().padding(6.dp),
+                textAlign = TextAlign.Center,
+                text = "Copyright © RVCODING 2024",
+                color = Color.White,
+                fontSize = 8.sp,
+                fontFamily = FontFamily.Monospace,
+                fontWeight = FontWeight.SemiBold
+            )
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
@@ -100,7 +128,29 @@ fun MyGasScreen() {
 
                 TextField(
                     modifier = Modifier.fillMaxWidth(),
-                    label = { Text(text = "mLs") },
+                    label = {
+                        Text(
+                            text = "GAS mL",
+                            color = Color.White,
+                            fontFamily = FontFamily.Monospace,
+                            fontWeight = FontWeight.SemiBold
+                        ) },
+                    trailingIcon = {
+                        if (gasInput.isNotBlank()) {
+                            IconButton(
+                                modifier = Modifier,
+                                onClick = {
+                                    gasInput = ""
+                                }
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Filled.Clear,
+                                    contentDescription = "down",
+                                    tint = Color.White
+                                )
+                            }
+                        }
+                    },
                     value = gasInput,
                     onValueChange = {
                         if (it.isDigitsOnly()
@@ -109,6 +159,12 @@ fun MyGasScreen() {
                             gasInput = it
                         }
                     },
+                    textStyle = TextStyle(
+                        color = Color.White,
+                        fontSize = 16.sp,
+                        fontFamily = FontFamily.Monospace,
+                        fontWeight = FontWeight.SemiBold
+                    ),
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Number,
                         imeAction = ImeAction.Done
@@ -123,15 +179,15 @@ fun MyGasScreen() {
                         focusedContainerColor = Color.Transparent,
                         unfocusedContainerColor = Color.Transparent,
                         disabledTextColor = TextFieldDefaults.colors().disabledTextColor,
-                        focusedIndicatorColor = TextFieldDefaults.colors().focusedIndicatorColor,
-                        unfocusedIndicatorColor = TextFieldDefaults.colors().unfocusedIndicatorColor,
+                        focusedIndicatorColor = Color.White,
+                        unfocusedIndicatorColor = Color.White,
                         errorIndicatorColor = TextFieldDefaults.colors().errorIndicatorColor,
-                        focusedTextColor = TextFieldDefaults.colors().focusedTextColor,
-                        unfocusedTextColor = TextFieldDefaults.colors().unfocusedTextColor,
+                        focusedTextColor = Color.White,
+                        unfocusedTextColor = Color.White,
                         errorTextColor = TextFieldDefaults.colors().errorTextColor,
                         disabledContainerColor = TextFieldDefaults.colors().disabledContainerColor,
                         errorContainerColor = TextFieldDefaults.colors().errorContainerColor,
-                        cursorColor = TextFieldDefaults.colors().cursorColor,
+                        cursorColor = Color.White,
                         errorCursorColor = TextFieldDefaults.colors().errorCursorColor,
                         textSelectionColors = TextFieldDefaults.colors().textSelectionColors,
                         disabledIndicatorColor = TextFieldDefaults.colors().disabledIndicatorColor,
@@ -181,21 +237,26 @@ fun MyGasScreen() {
                 )
 
                 HorizontalDivider(
-                    color = Color.LightGray
+                    color = Color.White
                 )
 
                 Text(
-                    modifier = Modifier.fillMaxWidth().padding(start = 16.dp, top = 16.dp, bottom = 16.dp, end = 16.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 16.dp, top = 16.dp, bottom = 16.dp, end = 16.dp),
                     text = "Result: ${String.format(
-                        format = "%.3f",
+                        format = "%.1f",
                         when {
                             gasInput.isEmpty() -> 0f
                             else -> gasInput.toFloat() * gasRatio.toFloat()
                         }
-                    )}mLs"
+                    )}mL (2 STROKE OIL)",
+                    color = Color.White,
+                    fontFamily = FontFamily.Monospace,
+                    fontWeight = FontWeight.SemiBold
                 )
 
-                Spacer(modifier = Modifier.weight(0.3f))
+                Spacer(modifier = Modifier.weight(0.15f))
 
             }
         }
@@ -224,13 +285,31 @@ fun Spinner(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(selectedItem)
-            Icon(Icons.Filled.ArrowDropDown, "down")
+            Row {
+                Text(
+                    text = "Ratio:  ",
+                    color = Color.White,
+                    fontFamily = FontFamily.Monospace,
+                    fontWeight = FontWeight.SemiBold
+                )
+                Text(
+                    text = selectedItem,
+                    color = Color.White,
+                    fontFamily = FontFamily.Monospace,
+                    fontWeight = FontWeight.SemiBold
+                )
+            }
+            Icon(
+                imageVector = Icons.Filled.ArrowDropDown,
+                contentDescription = "down",
+                tint = Color.White
+            )
         }
         DropdownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            containerColor = GreenWoods
         ) {
             items.forEach { item ->
                 DropdownMenuItem(
@@ -239,8 +318,26 @@ fun Spinner(
                         expanded = false
                     },
                     text = {
-                        Text(text = item)
-                    }
+                        Row(
+                            modifier = Modifier.fillMaxSize(),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = item,
+                                color = Color.White,
+                                fontFamily = FontFamily.Monospace,
+                                fontWeight = FontWeight.SemiBold
+                            )
+                        }
+                    },
+                    colors = MenuItemColors(
+                        textColor = Color.White,
+                        leadingIconColor = MenuDefaults.itemColors().textColor,
+                        trailingIconColor = MenuDefaults.itemColors().textColor,
+                        disabledTextColor = Color.LightGray,
+                        disabledLeadingIconColor = MenuDefaults.itemColors().textColor,
+                        disabledTrailingIconColor = MenuDefaults.itemColors().textColor
+                    )
                 )
             }
         }
