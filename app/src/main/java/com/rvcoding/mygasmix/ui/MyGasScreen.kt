@@ -128,7 +128,7 @@ fun MyGasScreen() {
                             value = gasInput,
                             onValueChange = {
                                 if (it.isDigitsOnly()
-                                    && it.length <= Int.MAX_VALUE
+                                    && it.length <= Int.MAX_VALUE.toString().length
                                     && it.toLong() < Int.MAX_VALUE) {
                                     gasInput = it
                                 }
