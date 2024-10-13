@@ -214,6 +214,9 @@ fun MyGasScreen(vm: MyGasViewModel = viewModel()) {
                                 "0.0185",
                                 "0.0180",
                                 "0.0175",
+                                "0.0170",
+                                "0.0165",
+                                "0.0160",
                             ),
                             selectedItem = gasRatio,
                             onItemSelected = { selected ->
