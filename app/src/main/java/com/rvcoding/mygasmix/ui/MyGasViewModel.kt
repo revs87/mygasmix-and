@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.stateIn
 
 class MyGasViewModel : ViewModel() {
 
-    val splashImages = flow<Int> {
+    val splashImages = flow<Pair<Int, Int>> {
         val images = listOf(
             R.drawable.splash,
             R.drawable.splash2,
@@ -21,24 +21,25 @@ class MyGasViewModel : ViewModel() {
             R.drawable.splash4,
             R.drawable.splash5,
         )
-        emit(images[0])
-        var currentIndex = 1
+        emit(Pair(images[0], images[0]))
+        var currentIndex = 0
 
         while (true) {
-            delay(5_000L)
-            emit(images[currentIndex])
-            if (currentIndex == images.size - 1) {
-                currentIndex = 0
+            delay(6_000L)
+            val nextIndex = if (currentIndex == images.size - 1) {
+                0
             } else {
-                currentIndex++
+                currentIndex + 1
             }
+            emit(Pair(images[currentIndex], images[nextIndex]))
+            currentIndex = nextIndex
         }
     }
         .flowOn(Dispatchers.IO)
         .stateIn(
             viewModelScope,
             SharingStarted.WhileSubscribed(5000L),
-            R.drawable.splash
+            Pair(R.drawable.splash, R.drawable.splash)
         )
 
 }

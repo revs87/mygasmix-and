@@ -48,6 +48,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
+import coil3.request.placeholder
 import com.rvcoding.mygasmix.ui.component.Spinner
 import com.rvcoding.mygasmix.ui.theme.GreenWoods
 
@@ -63,7 +64,8 @@ fun MyGasScreen(vm: MyGasViewModel = viewModel()) {
     ) {
         AsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
-                .data(splashImage)
+                .placeholder(splashImage.first)
+                .data(splashImage.second)
                 .crossfade(true)
                 .crossfade(1000)
                 .build(),
