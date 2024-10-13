@@ -138,7 +138,8 @@ fun MyGasScreen(vm: MyGasViewModel = viewModel()) {
                             },
                             value = gasInput,
                             onValueChange = {
-                                if (it.isDigitsOnly()
+                                if (it.isBlank()) { gasInput = "" }
+                                else if (it.isDigitsOnly()
                                     && it.length <= Int.MAX_VALUE.toString().length
                                     && it.toLong() < Int.MAX_VALUE) {
                                     gasInput = it
@@ -235,7 +236,7 @@ fun MyGasScreen(vm: MyGasViewModel = viewModel()) {
                             text = "Result: ${String.format(
                                 format = "%.1f",
                                 when {
-                                    gasInput.isEmpty() -> 0f
+                                    gasInput.isBlank() -> 0f
                                     else -> gasInput.toFloat() * gasRatio.toFloat()
                                 }
                             )}mL (2 STROKE OIL)",
